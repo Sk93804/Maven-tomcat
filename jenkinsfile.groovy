@@ -6,6 +6,7 @@ pipeline {
     }
     options{
         buildDiscarder(logRotator(numToKeepStr: '2'))
+        timestamps()
     }
     stages {
         stage("SCM") {
