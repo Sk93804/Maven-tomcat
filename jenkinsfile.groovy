@@ -3,8 +3,6 @@ pipeline {
         branch = '*/main'
         url = 'https://github.com/Sk93804/Maven-tomcat.git'
     }
-    
-    agent none  // To specify no global agent for the pipeline, and define agents within individual stages.
 
     stages {
         stage("SCM") {
