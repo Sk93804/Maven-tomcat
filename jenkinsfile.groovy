@@ -1,8 +1,8 @@
 pipeline {
     agent any
-    parameters{string(name: 'Branch', defaultValue: 'main', description: 'Branch to checkout')}
+    parameters{text(name: 'Release_Notes', defaultValue: '', description: 'This is the release notes')}
     environment {
-        branch = "*/${params.Branch}"
+        branch = "*/main"
         url = 'https://github.com/Sk93804/Maven-tomcat.git'
     }
     options{
