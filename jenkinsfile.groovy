@@ -1,11 +1,12 @@
-pipeline{
+Pipeline{
     environment{
         branch = '*/main'
         url = 'https://github.com/Sk93804/Maven-tomcat.git'
     }
     stages{
-        agent{ label 'slave-01'}
+        
         stage("SCM"){
+            agent{ label 'slave-01'}
             steps{
             checkout scmGit(branches: [[name: "${env.branch}"]], 
             extensions: [], 
