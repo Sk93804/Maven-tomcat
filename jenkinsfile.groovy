@@ -1,4 +1,5 @@
 pipeline {
+    agent any
     environment {
         branch = '*/main'
         url = 'https://github.com/Sk93804/Maven-tomcat.git'
