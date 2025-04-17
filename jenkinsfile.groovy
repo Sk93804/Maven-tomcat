@@ -8,7 +8,7 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '2'))
         timestamps()
         skipDefaultCheckout()
-        timestampFormat('dd-MM-yyyy HH:mm:ss')
+        timeout(time: 10, unit:'SECONDS')
     }
     stages {
         stage("SCM") {
