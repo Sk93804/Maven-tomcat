@@ -7,9 +7,9 @@ pipeline{
         agent{ label 'slave-01'}
         stage("SCM"){
             steps{
-            checkout scmGit(branches: [[name: '${env.branch}']], 
+            checkout scmGit(branches: [[name: "${env.branch}"]], 
             extensions: [], 
-            userRemoteConfigs: [[url: '${env.url}']])
+            userRemoteConfigs: [[url: "${env.url}"]])
             }
         }
         stage("Listing"){
