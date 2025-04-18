@@ -3,6 +3,9 @@ pipeline {
     environment {
         url = 'https://github.com/Sk93804/Maven-tomcat.git'
     }
+    tools{
+        maven 'Maven3.8.6'
+    }
     parameters {
         choice(name: 'Branch', choices: ['main', 'feature', 'Dev'], description: 'Select the branch to checkout the code')
         booleanParam(name: 'RUN_STAGE', defaultValue: true, description: 'Do you want to list files?')
@@ -22,6 +25,7 @@ pipeline {
                             extensions: [],
                             userRemoteConfigs: [[url: "${env.url}"]]
                         )
+                        sh 'mvn -v'
                     } else {
                         echo "Skipping checkout because Branch = ${params.Branch}"
                     }
