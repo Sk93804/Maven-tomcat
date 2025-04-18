@@ -28,9 +28,14 @@ pipeline {
         }
 
         stage("Listing") {
+            parameters{ booleanParam(name: 'RUN_STAGE?', defaultValue: true, description: '')}
             agent { label 'slave-01' }
             steps {
-                sh 'ls -lrt'
+                script{
+                    if (${params.RUN_STAGE?} == "true"){
+                     sh 'ls -lrt'
+                    }
+                }
             }
         }
     }
