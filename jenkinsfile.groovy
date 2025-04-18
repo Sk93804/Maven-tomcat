@@ -8,7 +8,6 @@ pipeline {
     }
     parameters {
         choice(name: 'Branch', choices: ['main', 'feature', 'Dev'], description: 'Select the branch to checkout the code')
-        booleanParam(name: 'RUN_STAGE', defaultValue: true, description: 'Do you want to list files?')
     }
     options {
         skipDefaultCheckout()
@@ -33,17 +32,11 @@ pipeline {
             }
         }
 
-        stage("Listing") {
+        stage("Build") {
             agent { label 'slave-01' }
             steps {
-                script {
-                    if (params.RUN_STAGE) {
-                        sh 'ls -lrt'
-                    } else {
-                        echo "Listing stage skipped as RUN_STAGE is false"
-                    }
-                }
-            }
+                sh 'cd /home/ubuntu/jenkins/workspace/First_job/'
+                sh 'mvn clean package'
         }
     }
 }
