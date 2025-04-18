@@ -1,39 +1,37 @@
 pipeline {
     agent any
-    parameters{choice(name: 'Branch', choices: ['DEV', 'PROD', 'QA'], description: '')}
     environment {
         url = 'https://github.com/Sk93804/Maven-tomcat.git'
     }
-    options{
-        buildDiscarder(logRotator(numToKeepStr: '2'))
-        timestamps()
+    parameters {
+        choice(name: 'Branch', choices: ['main', 'feature', 'Dev'], description: 'Select the branch to checkout the code')
+    }
+    options {
         skipDefaultCheckout()
-        timeout(time: 10, unit:'SECONDS')
     }
     stages {
-        stage("SCM") {
-            agent { label 'slave-01' }  // Agent specific to this stage
-            when {
-                anyOf{
-                    expression{ params.Branch == 'DEV'}
-                    expression{ params.Branch == 'QA' }
-                    expression{ params.Branch == 'PROD' }
-                }
-            }
+        stage("Checkout") {
+            agent { label 'slave-01' }
             steps {
-                checkout scmGit(
-                    branches: [[name: "*/main"]],
-                    extensions: [],
-                    userRemoteConfigs: [[url: "${env.url}"]]
-                )
+                script {
+                    if (params.Branch == 'main') {
+                        checkout scmGit(
+                            branches: [[name: "*/${params.Branch}"]],
+                            extensions: [],
+                            userRemoteConfigs: [[url: "${env.url}"]]
+                        )
+                    } else {
+                        echo "Skipping checkout because Branch = ${params.Branch}"
+                    }
+                }
             }
         }
 
         stage("Listing") {
+            agent { label 'slave-01' }
             steps {
                 sh 'ls -lrt'
             }
         }
     }
 }
-
