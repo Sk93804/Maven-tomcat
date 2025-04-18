@@ -5,6 +5,7 @@ pipeline {
     }
     parameters {
         choice(name: 'Branch', choices: ['main', 'feature', 'Dev'], description: 'Select the branch to checkout the code')
+        parameters{ booleanParam(name: 'RUN_STAGE?', defaultValue: true, description: '')}
     }
     options {
         skipDefaultCheckout()
@@ -28,12 +29,14 @@ pipeline {
         }
 
         stage("Listing") {
-            parameters{ booleanParam(name: 'RUN_STAGE?', defaultValue: true, description: '')}
             agent { label 'slave-01' }
             steps {
                 script{
                     if (${params.RUN_STAGE} == "true"){
-                     sh 'ls -lrt'
+                     sh 'ls -lrt'}
+                     else{
+                        echo "Listing stage skipped as RUN_STAGE is false"
+                     }
                     }
                 }
             }
