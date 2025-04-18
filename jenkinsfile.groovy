@@ -32,7 +32,7 @@ pipeline {
             agent { label 'slave-01' }
             steps {
                 script{
-                    if (${params.RUN_STAGE?} == "true"){
+                    if (${params.RUN_STAGE} == "true"){
                      sh 'ls -lrt'
                     }
                 }
