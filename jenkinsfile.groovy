@@ -22,7 +22,7 @@ pipeline {
             }
             steps {
                 checkout scmGit(
-                    branches: [[name: "*/${params.Branch}"]],
+                    branches: [[name: "*/main"]],
                     extensions: [],
                     userRemoteConfigs: [[url: "${env.url}"]]
                 )
