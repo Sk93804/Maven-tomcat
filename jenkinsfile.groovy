@@ -1,8 +1,7 @@
 pipeline {
     agent any
-    parameters{text(name: 'Release_Notes', defaultValue: '', description: 'This is the release notes')}
+    parameters{string(name: 'Branch', defaultValue: 'main', description: '')}
     environment {
-        branch = "*/main"
         url = 'https://github.com/Sk93804/Maven-tomcat.git'
     }
     options{
@@ -14,9 +13,12 @@ pipeline {
     stages {
         stage("SCM") {
             agent { label 'slave-01' }  // Agent specific to this stage
+            when {
+                expression {params.Branch == 'main'}
+            }
             steps {
                 checkout scmGit(
-                    branches: [[name: "${env.branch}"]],
+                    branches: [[name: "*/${params.Branch}"]],
                     extensions: [],
                     userRemoteConfigs: [[url: "${env.url}"]]
                 )
