@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    parameters{string(name: 'Branch', defaultValue: 'main', description: '')}
+    parameters{choice(name: 'Branch', choices: ['DEV', 'PROD', 'QA'], description: '')}
     environment {
         url = 'https://github.com/Sk93804/Maven-tomcat.git'
     }
@@ -14,7 +14,11 @@ pipeline {
         stage("SCM") {
             agent { label 'slave-01' }  // Agent specific to this stage
             when {
-                expression {params.Branch == 'main'}
+                anyOf{
+                    expression{ params.Branch == 'DEV'}
+                    expression{ params.Branch == 'QA' }
+                    expression{ params.Branch == 'PROD' }
+                }
             }
             steps {
                 checkout scmGit(
