@@ -14,7 +14,7 @@ pipeline{
             steps{
                sh 'mvn clean package'
                sh 'ls -ltr'
-               sh cd './target'
+               
             }
         }
     }
