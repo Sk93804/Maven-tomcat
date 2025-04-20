@@ -13,6 +13,7 @@ pipeline{
             agent{ label 'slave-01'}
             steps{
                sh 'mvn clean package'
+               sh 'mvn test'
                sh 'ls -ltr'
                
             }
