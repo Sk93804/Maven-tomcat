@@ -1,18 +1,20 @@
 pipeline {
     agent none
-    options{
-        buildDiscarder(logRotator(numToKeepStr: '2')) }
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '2'))
     }
+
     stages {
         stage('Checkout') {
             agent { label 'slave-01' }
             steps {
                 checkout scmGit(branches: [[name: '*/main']],
-                    extensions: [], 
+                    extensions: [],
                     userRemoteConfigs: [[url: 'https://github.com/Sk93804/Maven-tomcat.git']]
                 )
             }
         }
+
         stage('Build') {
             agent { label 'slave-01' }
             steps {
@@ -21,19 +23,29 @@ pipeline {
                 sh 'ls -ltr'
             }
         }
-        stage('Integration-Test'){
-            agent{ label 'slave-01' }
-            steps{
+
+        stage('Integration-Test') {
+            agent { label 'slave-01' }
+            steps {
                 sh 'mvn integration-test'
             }
         }
-        stage('Archieve Artifacts'){
-            agent{ label 'slave-01' }
-            steps{
+
+        stage('Test Reports') {
+            agent { label 'slave-01' }
+            steps {
+                junit 'target/surefire-reports/*.xml'
+            }
+        }
+
+        stage('Archive Artifacts') {
+            agent { label 'slave-01' }
+            steps {
                 archiveArtifacts artifacts: 'target/**/*.html', fingerprint: true
             }
         }
     }
+
     post {
         always {
             emailext(
