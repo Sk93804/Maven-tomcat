@@ -23,11 +23,11 @@ pipeline {
         always {
             emailext(
                 to: 'sudheesh.zx@gmail.com',
-                subject: "Build Status: $PROJECT_NAME - Build # $BUILD_NUMBER",
+                subject: "Build Status: ${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
                 body: """
-                  <h3>Build # $BUILD_NUMBER for project $PROJECT_NAME</h3>
-                  <p>Status: $BUILD_STATUS</p>
-                  <p>Check the console output at <a href="$BUILD_URL">$BUILD_URL</a></p>
+                  <h3>Build # ${env.BUILD_NUMBER} for project ${env.JOB_NAME}</h3>
+                  <p>Status: ${currentBuild.currentResult}</p>
+                  <p>Check the console output at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                 """,
                 mimeType: 'text/html',
                 attachLog: true
