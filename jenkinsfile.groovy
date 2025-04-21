@@ -1,5 +1,8 @@
 pipeline {
     agent none
+    options{
+        buildDiscarder(logRotator(numToKeepStr: '2')) }
+    }
     stages {
         stage('Checkout') {
             agent { label 'slave-01' }
@@ -25,6 +28,7 @@ pipeline {
             }
         }
         stage('Archieve Artifacts'){
+            agent{ label 'slave-01' }
             steps{
                 archiveArtifacts artifacts: 'target/**/*.html', fingerprint: true
             }
