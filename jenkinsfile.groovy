@@ -41,7 +41,7 @@ pipeline {
         stage('Archive Artifacts') {
             agent { label 'slave-01' }
             steps {
-                archiveArtifacts artifacts: 'target/**/*.html', fingerprint: true
+                archiveArtifacts artifacts: 'target/**/*.txt', fingerprint: true
             }
         }
     }
