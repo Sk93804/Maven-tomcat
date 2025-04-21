@@ -48,9 +48,7 @@ pipeline {
             agent { label 'slave-02'}
             steps{
                 sh ''' echo "Starting sonarQube Container" 
-                docker run -d --name sonarQube \ 
-                 -p 9000:9000 \
-                 sonarqube:latest
+                docker run -d --name sonarQube  -p 9000:9000 sonarqube:latest
                  echo "Waiting for SonarQube to be ready..."
                  sleep 30     
                 '''
