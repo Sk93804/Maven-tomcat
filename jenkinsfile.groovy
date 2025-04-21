@@ -18,6 +18,12 @@ pipeline {
                 sh 'ls -ltr'
             }
         }
+        stage('Integration-Test'){
+            agent{ label 'slave-01' }
+            steps{
+                sh 'mvn integration-test'
+            }
+        }
     }
     post {
         always {
