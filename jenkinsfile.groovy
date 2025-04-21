@@ -39,24 +39,22 @@ pipeline {
             }
         }
 
+        stage('SonarQube Analysis') {
+            agent { label 'slave-01' } // Where Maven is installed
+            environment {
+                SONARQUBE_ENV = 'MySonar' 
+            }
+            steps {
+                withSonarQubeEnv("${SONARQUBE_ENV}") {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+
         stage('Archive Artifacts') {
             agent { label 'slave-01' }
             steps {
                 archiveArtifacts artifacts: 'target/**/*.txt', fingerprint: true
-            }
-        }
-        stage('Start SonarQube'){
-            agent { label 'sonar-03'}
-            steps{
-                sh ''' docker rm sonarQube
-                 echo "Starting sonarQube Container" 
-                docker run -d --name sonarQube  -p 9000:9000 -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true  -v sonarqube_data:/opt/sonarqube/data  -v sonarqube_logs:/opt/sonarqube/logs sonarqube:latest 
-                 echo "Waiting for SonarQube to be ready..."
-                 sleep 30
-
-                 docker ps -a     
-                '''
-
             }
         }
     }
