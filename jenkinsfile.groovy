@@ -24,6 +24,11 @@ pipeline {
                 sh 'mvn integration-test'
             }
         }
+        stage('Archieve Artifacts'){
+            steps{
+                archiveArtifacts artifacts: 'target/**/*.html', fingerprint: true
+            }
+        }
     }
     post {
         always {
