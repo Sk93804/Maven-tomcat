@@ -48,9 +48,11 @@ pipeline {
             agent { label 'slave-02'}
             steps{
                 sh ''' echo "Starting sonarQube Container" 
-                docker run -d --name sonarQube  -p 9000:9000 sonarqube:latest
+                docker run -d --name sonarQube  -p 9000:9000 -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -v sonarqube_data:/opt/sonarqube/data  -v sonarqube_logs:/opt/sonarqube/logs sonarqube:latest 
                  echo "Waiting for SonarQube to be ready..."
-                 sleep 30     
+                 sleep 30
+
+                 docker ps -a     
                 '''
 
             }
