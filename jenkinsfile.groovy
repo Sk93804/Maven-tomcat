@@ -59,14 +59,12 @@ pipeline {
                 }
             }
         }
-        stage('Package'){
-            agent{ label 'slave-01'}{
+         stage('Package'){
+            agent {label 'slave-01'}
             steps{
                 sh 'mvn clean package'
             }
-            }
-        }
-
+         }
         stage('Archive Artifacts') {
             agent { label 'slave-01' }
             steps {
