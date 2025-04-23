@@ -46,7 +46,8 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    sh 'mvn sonar:sonar clean package'
+                    sh 'mvn sonar:sonar clean package \
+                        -Dsonar.projectKey=helloworld'
                 }
             }
         }
