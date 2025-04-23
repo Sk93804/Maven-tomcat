@@ -61,7 +61,9 @@ pipeline {
         }
         stage('Package'){
             agent{ label 'slave-01'}{
+            steps{
                 sh 'mvn clean package'
+            }
             }
         }
 
