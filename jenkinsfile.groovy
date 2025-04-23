@@ -46,9 +46,22 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    sh 'mvn sonar:sonar clean package \
+                    sh 'mvn sonar:sonar \
                         -Dsonar.projectKey=helloworld'
                 }
+            }
+        }
+        stage('Quality Gate'){
+            agent { label 'slave-01' }
+            steps{
+                timeout(time:2, unit:'MINUTES'){
+                    waitForQualityGate abortPipeline: false
+                }
+            }
+        }
+        stage('Package'){
+            agent{ label 'slave-01'}{
+                sh 'mvn clean package'
             }
         }
 
