@@ -53,6 +53,9 @@ pipeline {
         }
         stage('Quality Gate'){
             agent { label 'slave-01' }
+            script{
+                sleep(5)
+            }
             steps{
                 timeout(time:2, unit:'MINUTES'){
                     waitForQualityGate abortPipeline: false
