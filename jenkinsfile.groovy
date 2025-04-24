@@ -16,19 +16,21 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            agent { label 'slave-01' }
-            steps {
-                sh 'mvn clean package'
-                sh 'mvn test'
-                sh 'ls -ltr'
-            }
-        }
-
-        stage('Integration-Test') {
-            agent { label 'slave-01' }
-            steps {
-                sh 'mvn integration-test'
+        stage('Build and Integration Tests') {
+            parallel {
+                stage('Build') {
+                    agent { label 'slave-01' }
+                    steps {
+                        sh 'mvn test'
+                        sh 'ls -ltr'
+                    }
+                }
+                stage('Integration-Test') {
+                    agent { label 'slave-01' }
+                    steps {
+                        sh 'mvn integration-test'
+                    }
+                }
             }
         }
 
@@ -40,34 +42,36 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            agent { label 'slave-01' } // Where Maven is installed
+            agent { label 'slave-01' }
             environment {
-                SONARQUBE_ENV = 'MySonar' 
+                SONARQUBE_ENV = 'MySonar'
             }
             steps {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    sh 'mvn sonar:sonar \
-                        -Dsonar.projectKey=helloworld'
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=helloworld'
                 }
             }
         }
-        stage('Quality Gate'){
+
+        stage('Quality Gate') {
             agent { label 'slave-01' }
-            steps{
-                script{
+            steps {
+                script {
                     sleep(5)
                 }
-                timeout(time:2, unit:'MINUTES'){
+                timeout(time: 2, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: false
                 }
             }
         }
-         stage('Package'){
-            agent {label 'slave-01'}
-            steps{
+
+        stage('Package') {
+            agent { label 'slave-01' }
+            steps {
                 sh 'mvn clean package'
             }
-         }
+        }
+
         stage('Archive Artifacts') {
             agent { label 'slave-01' }
             steps {
@@ -82,9 +86,9 @@ pipeline {
                 to: 'sudheesh.zx@gmail.com',
                 subject: "Build Status: ${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
                 body: """
-                  <h3>Build # ${env.BUILD_NUMBER} for project ${env.JOB_NAME}</h3>
-                  <p>Status: ${currentBuild.currentResult}</p>
-                  <p>Check the console output at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                    <h3>Build # ${env.BUILD_NUMBER} for project ${env.JOB_NAME}</h3>
+                    <p>Status: ${currentBuild.currentResult}</p>
+                    <p>Check the console output at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
                 """,
                 mimeType: 'text/html',
                 attachLog: true
