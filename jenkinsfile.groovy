@@ -9,7 +9,7 @@ pipeline {
         stage('docker sonar'){
             agent{ label 'sonar-03'}
             steps{
-                sh 'docker rm  sonarQube'
+                // sh 'docker rm  sonarQube'
                 sh 'docker run -d --name sonarQube  -p 9000:9000 -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -v sonarqube_data:/opt/sonarqube/data  -v sonarqube_logs:/opt/sonarqube/logs sonarqube:latest'
             }
         }
