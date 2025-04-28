@@ -1,34 +1,105 @@
-pipeline{
+pipeline {
     agent none
-    stages{
-        stage('Code Checkout'){
-            agent{ label 'slave-01'}
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '2'))
+        skipDefaultCheckout(true)
+    }
+
+    stages {
+        stage('docker sonar'){
+            agent{ label 'slave-03'}
             steps{
-                 checkout scmGit(branches: [[name: '*/main']],
+                sh 'docker rm  sonarQube'
+                sh 'docker run docker run -d --name sonarQube  -p 9000:9000 -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true --memory="768m" --memory-swap="1g" -v sonarqube_data:/opt/sonarqube/data  -v sonarqube_logs:/opt/sonarqube/logs sonarqube:latest'
+            }
+        }
+        stage('Checkout') {
+            agent { label 'slave-01' }
+            steps {
+                checkout scmGit(branches: [[name: '*/main']],
                     extensions: [],
-                    userRemoteConfigs: [[url: 'https://github.com/Sk93804/Maven-tomcat.git']])
+                    userRemoteConfigs: [[url: 'https://github.com/Sk93804/Maven-tomcat.git']]
+                )
             }
         }
-        stage('sonar analysis'){
-            agent{label 'slave-01'}
-            environment{
-                SONARQUBE = 'MySonar'
-            }
-            withSonarQubeEnv("$SONARQUBE"){
-                sh "mvn sonar:sonar"
-            }
-        }
-        stage('Quality Gate'){
-            steps{
-                timeout(time: 2, unit: 'MINUTES')
-                waitForQualityGate abortPipeline: true
-            }
-            input{
-                message "The Quality Gate as passed pls merge the PR"
-                parameters{
-                    choice(name: 'Merge', choices: ['Yes', 'No'])
+
+        stage('Build and Integration Tests') {
+            parallel {
+                stage('Build') {
+                    agent { label 'slave-01' }
+                    steps {
+                        sh 'mvn test'
+                        sh 'ls -ltr'
+                    }
+                }
+                stage('Integration-Test') {
+                    agent { label 'slave-01' }
+                    steps {
+                        sh 'mvn integration-test'
+                    }
                 }
             }
+        }
+
+        stage('Test Reports') {
+            agent { label 'slave-01' }
+            steps {
+                junit 'target/surefire-reports/*.xml'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            agent { label 'slave-01' }
+            environment {
+                SONARQUBE_ENV = 'MySonar'
+            }
+            steps {
+                withSonarQubeEnv("${SONARQUBE_ENV}") {
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=helloworld'
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            agent { label 'slave-01' }
+            steps {
+                script {
+                    sleep(5)
+                }
+                timeout(time: 2, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: false
+                }
+            }
+        }
+
+        stage('Package') {
+            agent { label 'slave-01' }
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+
+        stage('Archive Artifacts') {
+            agent { label 'slave-01' }
+            steps {
+                archiveArtifacts artifacts: 'target/**/*.txt', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        always {
+            emailext(
+                to: 'sudheesh.zx@gmail.com',
+                subject: "Build Status: ${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - ${currentBuild.currentResult}",
+                body: """
+                    <h3>Build # ${env.BUILD_NUMBER} for project ${env.JOB_NAME}</h3>
+                    <p>Status: ${currentBuild.currentResult}</p>
+                    <p>Check the console output at <a href="${env.BUILD_URL}">${env.BUILD_URL}</a></p>
+                """,
+                mimeType: 'text/html',
+                attachLog: true
+            )
         }
     }
 }
