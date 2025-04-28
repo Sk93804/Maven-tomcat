@@ -55,7 +55,7 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=helloworld'
+                    sh 'mvn sonar:sonar -Dsonar.projectKey=helloworld -Dsonar.host.url=http://52.66.100.152:9000'
                 }
             }
         }
