@@ -13,11 +13,11 @@ pipeline {
         stage('Checkout') {
             agent { label 'slave-01' }
             steps {
-                def config = [
+                script{
+                    def config = [
                     branch = 'main'
                     url = 'https://github.com/Sk93804/Maven-tomcat.git'
                 ]
-                script{
                     gitChekout(config)
                 }
             }
@@ -28,8 +28,8 @@ pipeline {
                 stage('Unit-Test') {
                     agent { label 'slave-01' }
                     steps {
-                       def command = [ option = 'test']
                        script{
+                        def command = [ option = 'test']
                          Unittest(command)
                        }
                     }
@@ -37,8 +37,8 @@ pipeline {
                 stage('Integration-Test') {
                     agent { label 'slave-01' }
                     steps {
-                        def command = [option = 'integrtaion-test']
                         script{
+                            def command = [option = 'integrtaion-test']
                                Int-test(command)
                         }
                     }
