@@ -29,7 +29,7 @@ pipeline {
                     agent { label 'slave-01' }
                     steps {
                        script{
-                        def command = [ option = 'test']
+                        def command = [ option: 'test']
                          Unittest(command)
                        }
                     }
@@ -38,7 +38,7 @@ pipeline {
                     agent { label 'slave-01' }
                     steps {
                         script{
-                            def command = [option = 'integrtaion-test']
+                            def command = [option: 'integrtaion-test']
                                Int-test(command)
                         }
                     }
@@ -60,7 +60,7 @@ pipeline {
             }
             steps {
                 script{
-                    sonarScan(SONARQUBE_ENV = "${SONARQUBE_ENV}", projectKey = 'helloworld', sonarUrl = 'http://3.109.182.116:9000')
+                    sonarScan(SONARQUBE_ENV: "${SONARQUBE_ENV}", projectKey: 'helloworld', sonarUrl: 'http://3.109.182.116:9000')
                 }
             }
         }
@@ -81,7 +81,7 @@ pipeline {
             agent { label 'slave-01' }
             steps {
                 script{
-                    runPackage(goal = 'clean', option = 'package')
+                    runPackage(goal:'clean', option: 'package')
                 }
             }
         }
