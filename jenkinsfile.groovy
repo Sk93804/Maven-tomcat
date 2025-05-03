@@ -1,23 +1,22 @@
-@Library('SHARED_LIBRARY') _
-
+@Library('SHARED_LIBRARY') _  // Import shared library
 
 pipeline {
 
-    agent none
+    agent none  // No global agent, individual stages will have their own agents
     options {
-        buildDiscarder(logRotator(numToKeepStr: '2'))
-        skipDefaultCheckout(true)
+        buildDiscarder(logRotator(numToKeepStr: '2'))  // Discard old builds after 2 builds
+        skipDefaultCheckout(true)  // Skip default checkout, as you’re doing manual checkout
     }
 
     stages {
         stage('Checkout') {
             agent { label 'slave-01' }
             steps {
-                script{
+                script {
                     def config = [
-                    branch = 'main'
-                    url = 'https://github.com/Sk93804/Maven-tomcat.git'
-                ]
+                        branch: 'main',
+                        url: 'https://github.com/Sk93804/Maven-tomcat.git'
+                    ]
                     gitChekout(config)
                 }
             }
@@ -28,18 +27,18 @@ pipeline {
                 stage('Unit-Test') {
                     agent { label 'slave-01' }
                     steps {
-                       script{
-                        def command = [ option: 'test']
-                         Unittest(command)
-                       }
+                        script {
+                            def command = [option: 'test']
+                            Unittest(command)
+                        }
                     }
                 }
                 stage('Integration-Test') {
                     agent { label 'slave-01' }
                     steps {
-                        script{
-                            def command = [option: 'integrtaion-test']
-                               Int-test(command)
+                        script {
+                            def command = [option: 'integration-test']
+                            Int-test(command)  // Assuming the function name is IntTest
                         }
                     }
                 }
@@ -59,7 +58,7 @@ pipeline {
                 SONARQUBE_ENV = 'MySonar'
             }
             steps {
-                script{
+                script {
                     sonarScan(SONARQUBE_ENV: "${SONARQUBE_ENV}", projectKey: 'helloworld', sonarUrl: 'http://3.109.182.116:9000')
                 }
             }
@@ -80,8 +79,8 @@ pipeline {
         stage('Package') {
             agent { label 'slave-01' }
             steps {
-                script{
-                    runPackage(goal:'clean', option: 'package')
+                script {
+                    runPackage(goal: 'clean', option: 'package')
                 }
             }
         }
