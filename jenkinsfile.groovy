@@ -1,4 +1,8 @@
+@Library('SHARED_LIBRARY') _
+
+
 pipeline {
+
     agent none
     options {
         buildDiscarder(logRotator(numToKeepStr: '2'))
@@ -6,36 +10,37 @@ pipeline {
     }
 
     stages {
-        stage('docker sonar'){
-            agent{ label 'sonar-03'}
-            steps{
-                // sh 'docker rm  sonarQube'
-                sh 'docker run -d --name sonarQube  -p 9000:9000 -e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true -v sonarqube_data:/opt/sonarqube/data  -v sonarqube_logs:/opt/sonarqube/logs sonarqube:latest'
-            }
-        }
         stage('Checkout') {
             agent { label 'slave-01' }
             steps {
-                checkout scmGit(branches: [[name: '*/main']],
-                    extensions: [],
-                    userRemoteConfigs: [[url: 'https://github.com/Sk93804/Maven-tomcat.git']]
-                )
+                def config = [
+                    branch = 'main'
+                    url = 'https://github.com/Sk93804/Maven-tomcat.git'
+                ]
+                script{
+                    gitChekout(config)
+                }
             }
         }
 
-        stage('Build and Integration Tests') {
+        stage('Unit test and Integration Tests') {
             parallel {
-                stage('Build') {
+                stage('Unit-Test') {
                     agent { label 'slave-01' }
                     steps {
-                        sh 'mvn test'
-                        sh 'ls -ltr'
+                       def command = [ option = 'test']
+                       script{
+                         Unittest(command)
+                       }
                     }
                 }
                 stage('Integration-Test') {
                     agent { label 'slave-01' }
                     steps {
-                        sh 'mvn integration-test'
+                        def command = [option = 'integrtaion-test']
+                        script{
+                               Int-test(command)
+                        }
                     }
                 }
             }
@@ -54,8 +59,8 @@ pipeline {
                 SONARQUBE_ENV = 'MySonar'
             }
             steps {
-                withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    sh 'mvn sonar:sonar -Dsonar.projectKey=helloworld -Dsonar.host.url=http://52.66.100.152:9000'
+                script{
+                    sonarScan(SONARQUBE_ENV = "${SONARQUBE_ENV}", projectKey = 'helloworld', sonarUrl = 'http://52.66.100.152:9000')
                 }
             }
         }
@@ -75,7 +80,9 @@ pipeline {
         stage('Package') {
             agent { label 'slave-01' }
             steps {
-                sh 'mvn clean package'
+                script{
+                    package(goal = 'clean', option = 'package')
+                }
             }
         }
 
