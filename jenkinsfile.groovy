@@ -81,7 +81,7 @@ pipeline {
             agent { label 'slave-01' }
             steps {
                 script{
-                    package(goal = 'clean', option = 'package')
+                    runPackage(goal = 'clean', option = 'package')
                 }
             }
         }
