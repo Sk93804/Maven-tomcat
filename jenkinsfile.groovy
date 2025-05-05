@@ -61,7 +61,7 @@ pipeline {
                 script {
                     sonarScan([SONARQUBE_ENV: "${SONARQUBE_ENV}",
                      projectKey: 'helloworld', 
-                     sonarUrl: 'http://3.109.182.116:9000'])
+                     sonarUrl: 'http://3.111.215.124:9000'])
                 }
             }
         }
