@@ -38,7 +38,7 @@ pipeline {
                     steps {
                         script {
                             def command = [option: 'integration-test']
-                            Int-test(command)  // Assuming the function name is IntTest
+                            inttest(command)  // Assuming the function name is IntTest
                         }
                     }
                 }
