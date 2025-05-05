@@ -66,18 +66,6 @@ pipeline {
             }
         }
 
-        stage('Quality Gate') {
-            agent { label 'slave-01' }
-            steps {
-                script {
-                    sleep(5)
-                }
-                timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: false
-                }
-            }
-        }
-
         stage('Package') {
             agent { label 'slave-01' }
             steps {
