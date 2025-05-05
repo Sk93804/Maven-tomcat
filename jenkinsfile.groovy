@@ -65,6 +65,13 @@ pipeline {
                 }
             }
         }
+        stage('Quality Gate'){
+            steps{
+                script{
+                    qualityGate()
+                }
+            }
+        }
 
         stage('Package') {
             agent { label 'slave-01' }
