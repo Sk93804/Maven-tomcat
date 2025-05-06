@@ -2,7 +2,7 @@
 
 <body>
     <h2>Hello Jakarta EE 9 with Java 17 on Azure</h2>
-    <p>This is a sample JSP page.. Welcome</p>
+    <p>This is a sample JSP page.. Welcomeee</p>
     <a href="./helloservlet">Hit the /hello Servlet</a>
 </body>
 
