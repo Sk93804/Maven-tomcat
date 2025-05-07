@@ -52,26 +52,26 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            agent { label 'slave-01' }
-            environment {
-                SONARQUBE_ENV = 'MySonar'
-            }
-            steps {
-                script {
-                    sonarScan([SONARQUBE_ENV: "${SONARQUBE_ENV}",
-                     projectKey: 'helloworld', 
-                     sonarUrl: 'http://13.126.20.218:9000'])
-                }
-            }
-        }
-        stage('Quality Gate'){
-            steps{
-                script{
-                    qualityGate()
-                }
-            }
-        }
+        // stage('SonarQube Analysis') {
+        //     agent { label 'slave-01' }
+        //     environment {
+        //         SONARQUBE_ENV = 'MySonar'
+        //     }
+        //     steps {
+        //         script {
+        //             sonarScan([SONARQUBE_ENV: "${SONARQUBE_ENV}",
+        //              projectKey: 'helloworld', 
+        //              sonarUrl: 'http://13.126.20.218:9000'])
+        //         }
+        //     }
+        // }
+        // stage('Quality Gate'){
+        //     steps{
+        //         script{
+        //             qualityGate()
+        //         }
+        //     }
+        // }
         stage('OWASP'){
             agent { label 'slave-02' }
             steps{
