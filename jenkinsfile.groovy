@@ -72,6 +72,14 @@ pipeline {
                 }
             }
         }
+        stage('OWASP'){
+            agent { label 'slave-02' }
+            steps{
+                script{
+                    Owasp()
+                }
+            }
+        }
 
         stage('Package') {
             agent { label 'slave-01' }
