@@ -1,5 +1,8 @@
 pipeline{
     agent {label 'sonar-03'}
+    options{
+        buildDiscarder(logRotator(numToKeepStr: '2'))
+    }
     stages{
         stage('checkout'){
              steps{
