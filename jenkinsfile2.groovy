@@ -1,20 +1,28 @@
 pipeline{
-    agent { label 'sonar-03'}
+    agent {label 'sonar-03'}
     stages{
-        stage('chekout'){
-
+        stage('checkout'){
+             steps{
+                checkout scmGit(branches: [[name: "*/Dev"]], 
+                extensions: [], 
+                userRemoteConfigs: [[url: 'https://github.com/Sk93804/Maven-tomcat.git']])
+             }
         }
-        stage('sonar-scan'){
+       stage('sonar analysis'){
+        steps{
             withSonarQubeEnv('MySonar'){
                 sh 'sonar-scanner'
             }
-        }
-        stage('Qualitygate'){
-            steps{
-                timeout(time: 2, unit:'MINUTES'){
-                waitForQualityGate abortPipeline: true
+        } 
+       }
+       stage('QualityGate'){
+        steps{
+            timeout(time: 2, units:'MINUTES'){
+                def qg = waitForQualityGate()
+                if(qg.status != 'OK'){
+                    error "Pipeline aborted due to quality  gate failure: ${qg.status}"
                 }
             }
         }
-    }
+       }
 }
