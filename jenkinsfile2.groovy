@@ -18,7 +18,7 @@ pipeline {
                     userRemoteConfigs: [[url: 'https://github.com/Sk93804/Maven-tomcat.git']]
                 )
 
-                sh 'pwd && ls -ltr'
+                sh 'mvn clean package'
             }
         }
 
