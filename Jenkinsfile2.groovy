@@ -9,10 +9,10 @@ pipeline{
              }
         }
         stage('Sonar Analysis'){
+            agent {label 'sonar-03' }
             steps{
                 withSonarQubeEnv('MySonar') {
-                    sh ''' cd ./src 
-                      sonar-scanner'''
+                    sh '''sonar-scanner'''
                 }
             }
         }
