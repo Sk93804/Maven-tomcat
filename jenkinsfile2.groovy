@@ -22,7 +22,7 @@ pipeline {
         stage('Sonar Analysis') {
             steps {
                 withSonarQubeEnv('MySonar') {
-                    sh '${tool 'SonarScanner'}/bin/sonar-scanner'
+                    sh "${tool 'SonarScanner'}/bin/sonar-scanner"
                 }
             }
         }
