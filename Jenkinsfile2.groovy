@@ -3,7 +3,7 @@ pipeline{
     stages{
         stage('checkout'){
              steps{
-                checkout scmGit(branches: [[name: "*/main"]], 
+                checkout scmGit(branches: [[name: "*/Dev"]], 
                 extensions: [], 
                 userRemoteConfigs: [[url: 'https://github.com/Sk93804/Maven-tomcat.git']])
              }
