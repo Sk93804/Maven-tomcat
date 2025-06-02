@@ -5,7 +5,7 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '2'))
         skipDefaultCheckout()
     }
-    env{
+    environment{
         SONAR_TOKEN = "sqa_d3499354cc4698cde22d775ea6b0323771bb9372"
     }
 
