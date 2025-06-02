@@ -22,10 +22,10 @@ pipeline{
             }
             post{
                 success{
-                    gh pr create --title "Automated PR from Jenkins after Quality Gate Passed" \
+                  sh '''  gh pr create --title "Automated PR from Jenkins after Quality Gate Passed" \
                    --body "This PR was raised automatically after SonarQube Quality Gate passed." \
                    --base main \
-                   --head Dev
+                   --head Dev '''
                 }
                 failure{
                     echo "The pipeline has failed to pass the Quality gate"
