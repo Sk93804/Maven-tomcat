@@ -11,8 +11,10 @@ pipeline{
         stage('Sonar Analysis'){
             agent {label 'sonar-03' }
             steps{
+                dir('Maven-tomcat'){
                 withSonarQubeEnv('MySonar') {
                     sh '''sonar-scanner'''
+                }
                 }
             }
         }
