@@ -6,6 +6,8 @@ pipeline{
                 checkout scmGit(branches: [[name: "*/Dev"]], 
                 extensions: [], 
                 userRemoteConfigs: [[url: 'https://github.com/Sk93804/Maven-tomcat.git']])
+
+                sh 'pwd && ls -ltr'
              }
         }
        stage('sonar analysis'){
