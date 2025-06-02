@@ -5,6 +5,9 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '2'))
         skipDefaultCheckout()
     }
+    env{
+        SONAR_TOKEN = "sqa_d3499354cc4698cde22d775ea6b0323771bb9372"
+    }
 
     stages {
         stage('Checkout') {
@@ -22,7 +25,7 @@ pipeline {
         stage('Sonar Analysis') {
             steps {
                 withSonarQubeEnv('MySonar') {
-                    sh "${tool 'SonarScanner'}/bin/sonar-scanner"
+                    sh "${tool 'SonarScanner'}/bin/sonar-scanner  -Dsonar.login=$SONAR_TOKEN"
                 }
             }
         }
