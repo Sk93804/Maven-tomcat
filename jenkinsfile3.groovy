@@ -24,7 +24,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'USER', passwordVariable: 'PASS')]){
                     sh '''
                     curl -v  -u $USER:$PASS --upload-file target/helloworld.war \
-                    http://13.233.173.87:8081/repository/maven-releases/
+                    http://13.233.173.87:8081/repository/maven-releases/com/sudheesh/helloworld/1.0.0/helloworld-1.0.0.war
                     '''
                 }
             }
