@@ -29,7 +29,7 @@ pipeline {
                     steps {
                         script {
                             def command = [option: 'test']
-                            Unittest(command)
+                            Unittest(command)git 
                         }
                     }
                 }
