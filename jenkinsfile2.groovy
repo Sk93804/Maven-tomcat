@@ -1,45 +1,44 @@
 pipeline {
-    agent { label 'sonar-03' }
+    agent { label 'Owasp' }
 
     options {
         buildDiscarder(logRotator(numToKeepStr: '2'))
         skipDefaultCheckout()
     }
-    environment{
-        SONAR_TOKEN = "sqa_d3499354cc4698cde22d775ea6b0323771bb9372"
+
+    environment {
+        NVD_API_TOKEN = "80014e96-9700-426b-af09-d7e5b2f6ac7e"
     }
 
     stages {
         stage('Checkout') {
             steps {
                 checkout scmGit(
-                    branches: [[name: "*/Dev"]],
+                    branches: [[name: "*/main"]],
                     extensions: [],
                     userRemoteConfigs: [[url: 'https://github.com/Sk93804/Maven-tomcat.git']]
                 )
-
-                sh 'mvn clean package'
             }
         }
 
-        stage('Sonar Analysis') {
+        stage('Build') {
             steps {
-                withSonarQubeEnv('MySonar') {
-                    sh "${tool 'SonarScanner'}/bin/sonar-scanner "
+                dir('Maven-tomcat') {
+                    sh 'mvn clean package'
                 }
             }
         }
 
-        stage('QualityGate') {
+        stage('OWASP') {
             steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    script{
-                    def qg = waitForQualityGate()
-                    if (qg.status != 'OK') {
-                        error "Pipeline aborted due to Quality Gate failure: ${qg.status}"
-                    }
-                    }
-                }
+                dependencyCheck additionalArguments: """
+                    --project HelloWorld \
+                    -o ./ \
+                    -s ./Maven-tomcat \
+                    -f ALL \
+                    --nvdApiKey ${NVD_API_TOKEN}
+                """
+                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
             }
         }
     }
