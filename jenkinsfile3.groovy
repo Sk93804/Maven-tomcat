@@ -1,5 +1,5 @@
 pipeline{
-    agent any
+    agent {label 'Owasp'}
     environment{
         NVD_API = "80014e96-9700-426b-af09-d7e5b2f6ac7e"
     }
