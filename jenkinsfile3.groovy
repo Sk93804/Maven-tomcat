@@ -32,6 +32,7 @@ pipeline{
                 --data /home/ubuntu/dc-data \
                 --noupdate
             '''
+              sh ' echo "$NVD_API"'
                 }
             }
             post{
