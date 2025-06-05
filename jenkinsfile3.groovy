@@ -36,9 +36,9 @@ pipeline{
             post{
                 always{
                     publishHTML (target : [
-                        reportName: "Dependency-check-report"
-                        reportDir: './dependency-check-report/'
-                        reportFiles: "dependency-check-report.html"
+                        reportName: "Dependency-check-report",
+                        reportDir: './dependency-check-report/',
+                        reportFiles: "dependency-check-report.html", 
                         reportTitles: 'DC-check'
                     ])
                 }
