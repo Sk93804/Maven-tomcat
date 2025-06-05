@@ -21,16 +21,16 @@ pipeline{
         stage('Owasp-scan'){
             steps{
                 script{
-                    dependencyCheck additionalArguments:"""
-                    --project "HELLOWORLD"
-                    -o ./ \
-                    -s ./ \
-                    -f "ALL"
-                    --noupdate
-                    --data /home/ubuntu/dc-data
-                    --nvdApiKey $NVD_API
-                    """
-                    dependencyCheckPublisher pattern: 'dependency-check-report.html'
+                  sh '''
+                /opt/dependency-check/bin/dependency-check.sh \
+                --project "HELLOWORLD" \
+                -o ./dependency-check-report \
+                -s ./ \
+                -f ALL \
+                --nvdApiKey $NVD_API
+                --data /opt/dc-data \
+                --noupdate
+            '''
                 }
             }
         }
