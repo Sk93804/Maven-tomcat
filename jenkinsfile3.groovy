@@ -21,6 +21,7 @@ pipeline{
         stage('Owasp-scan'){
             steps{
                 script{
+                    withCredentials([string(credentialsId: 'NVD_API', variable: 'NVD_API')]){
                   sh '''
                 /opt/dependency-check/bin/dependency-check.sh \
                 --project "HELLOWORLD" \
@@ -31,7 +32,6 @@ pipeline{
                 --data /home/ubuntu/dc-data \
                 --noupdate
             '''
-            sh 'pwd'
                 }
             }
             post{
