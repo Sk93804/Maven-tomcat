@@ -28,7 +28,7 @@ pipeline{
                 -s ./ \
                 -f ALL \
                 --nvdApiKey $NVD_API \
-                --data /opt/dc-data \
+                --data /home/ubuntu/dc-data \
                 --noupdate
             '''
                 }
