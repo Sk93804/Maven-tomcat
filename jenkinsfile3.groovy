@@ -14,9 +14,7 @@ pipeline{
         stage('Build'){
             steps{
                 script{
-                    dir('Maven-tomcat'){
                         sh 'mvn clean package'
-                    }
                 }
             }
         }
