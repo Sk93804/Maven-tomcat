@@ -27,7 +27,7 @@ pipeline{
                 -o ./dependency-check-report \
                 -s ./ \
                 -f ALL \
-                --nvdApiKey $NVD_API
+                --nvdApiKey $NVD_API \
                 --data /opt/dc-data \
                 --noupdate
             '''
