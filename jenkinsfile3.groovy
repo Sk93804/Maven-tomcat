@@ -31,6 +31,7 @@ pipeline{
                 --data /home/ubuntu/dc-data \
                 --noupdate
             '''
+            sh 'pwd'
                 }
             }
             post{
