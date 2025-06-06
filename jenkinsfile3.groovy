@@ -16,7 +16,7 @@ pipeline {
             steps {
                 script {
                     sh 'mvn clean package'
-                    archiveArtifacts artifacts: 'src/target/helloworld.war' , fingerprint: true
+                    archiveArtifacts artifacts: 'target/helloworld.war' , fingerprint: true
                     archiveArtifacts artifacts: 'Dockerfile'
 
                 }
