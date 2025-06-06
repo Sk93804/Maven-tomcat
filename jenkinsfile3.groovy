@@ -67,7 +67,7 @@ pipeline {
             agent { label 'sonar-03'}
             steps{
                 unstash 'warfile'
-                unstach 'Dockerfile'
+                unstash 'Dockerfile'
                 sh 'docker build -t helloworld:lts .'
             }
         }
