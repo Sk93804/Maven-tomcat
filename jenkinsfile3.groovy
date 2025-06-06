@@ -62,6 +62,7 @@ pipeline {
             }
         }
         stage('Docker image'){
+            agent { label 'sonar-03'}
             steps{
                 unstash 'app-war'
                 sh 'docker build -t helloworld:lts .'
