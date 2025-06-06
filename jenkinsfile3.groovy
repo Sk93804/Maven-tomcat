@@ -18,7 +18,7 @@ pipeline {
                     sh 'mvn clean package'
                     sh 'ls -lrt'
                     stash includes: 'target/helloworld.war', name: 'warfile'
-                    stash includes: 'src/Dockerfile', name: 'Dockerfile'
+                    stash includes: 'Dockerfile.dockerfile', name: 'Dockerfile'
 
                 }
             }
