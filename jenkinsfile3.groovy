@@ -16,20 +16,21 @@ pipeline {
             steps {
                 script {
                     sh 'mvn clean package'
+                    stash includes: 'target/helloworld.war', name: 'app-war'
                 }
             }
         }
-        stage('Deploy Artifacts'){
-            steps{
-                withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'USER', passwordVariable: 'PASS')]){
-                    sh '''
-                    curl -v  -u $USER:$PASS --upload-file target/helloworld.war \
-                    http://13.233.173.87:8081/repository/maven-raw/helloworld.war
+        // stage('Deploy Artifacts'){
+        //     steps{
+        //         withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'USER', passwordVariable: 'PASS')]){
+        //             sh '''
+        //             curl -v  -u $USER:$PASS --upload-file target/helloworld.war \
+        //             http://13.233.173.87:8081/repository/maven-raw/helloworld.war
 
-                    '''
-                }
-            }
-        }
+        //             '''
+        //         }
+        //     }
+        // }
 
         stage('Owasp-scan') {
             steps {
@@ -58,6 +59,12 @@ pipeline {
                         reportTitles: 'DC-check'
                     ])
                 }
+            }
+        }
+        stage('Docker image'){
+            steps{
+                unstash 'app-war'
+                sh 'docker build -t helloworld:lts .'
             }
         }
     }
