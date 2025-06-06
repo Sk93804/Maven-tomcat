@@ -16,8 +16,8 @@ pipeline {
             steps {
                 script {
                     sh 'mvn clean package'
-                    archiveArtifacts artifacts: 'target/helloworld.war' , fingerprint: true
-                    archiveArtifacts artifacts: 'src/Dockerfile'
+                    stash includes: 'target/helloworld.war', name: 'warfile'
+                    stash includes: 'src/Dockerfile', name: 'Dockerfile'
 
                 }
             }
@@ -66,8 +66,8 @@ pipeline {
         stage('Docker image'){
             agent { label 'sonar-03'}
             steps{
-                copyArtifacts(projectName: 'Owasp', filter: './helloworld.war')
-                copyArtifacts(projectName: 'Owasp', filter: 'Dockerfile')
+                unstash 'warfile'
+                unstach 'Dockerfile'
                 sh 'docker build -t helloworld:lts .'
             }
         }
