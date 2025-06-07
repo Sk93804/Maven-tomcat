@@ -69,6 +69,7 @@ pipeline {
             steps{
                 unstash 'warfile'
                 unstash 'Dockerfile'
+                sh 'ls -lrt'
                 sh 'docker build -t helloworld:lts -f Dockerfile.dockerfile .'
             }
         }
