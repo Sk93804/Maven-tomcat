@@ -1,6 +1,6 @@
 pipeline {
     agent { label 'Owasp' }
-    option{
+    options{
         skipDefaultCheckout()
         buildDiscarder(logRotator(numToKeepStr: '2'))
     }
