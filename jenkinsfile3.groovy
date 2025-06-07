@@ -1,6 +1,9 @@
 pipeline {
     agent { label 'Owasp' }
-
+    option{
+        skipDefaultCheckout()
+        buildDiscarder(logRotator(numToKeepStr: '2'))
+    }
     stages {
         stage('Checkout') {
             steps {
