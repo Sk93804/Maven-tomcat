@@ -79,7 +79,7 @@ pipeline {
                 unstash 'warfile'
                 unstash 'Dockerfile'
                 sh 'ls -lrt'
-                def myimage = docker.build('helloworld', '-f Dockerfile.dockerfile .')
+                def myimage = docker.build('helloworld', '--build-arg PKG=apt -f Dockerfile.dockerfile .')
                 myimage.tag('sudheeshsn/helloworld:lts')
                 sh 'docker images'
                 }
