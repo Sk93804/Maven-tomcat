@@ -5,4 +5,3 @@ COPY ./target/helloworld.war .
 ARG PKG 
 RUN $PKG update 
 EXPOSE 8080
-USER sudheesh
