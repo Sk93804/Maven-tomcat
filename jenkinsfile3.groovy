@@ -75,12 +75,14 @@ pipeline {
         stage('Docker image'){
             agent { label 'sonar-03'}
             steps{
+                scripts{
                 unstash 'warfile'
                 unstash 'Dockerfile'
                 sh 'ls -lrt'
                 def myimage = docker.build('helloworld:lts', '-f Dockerfile.dockerfile .')
                 myimage.tag('sudheeshsn/helloworld:lts')
                 sh 'docker images'
+                }
             }
         }
     }
