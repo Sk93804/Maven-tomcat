@@ -5,6 +5,11 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '2'))
     }
     stages {
+        stage('clean ws'){
+            steps{
+                cleanWs()
+            }
+        }
         stage('Checkout') {
             steps {
                 checkout scmGit(
@@ -73,7 +78,8 @@ pipeline {
                 unstash 'warfile'
                 unstash 'Dockerfile'
                 sh 'ls -lrt'
-                sh 'docker build -t helloworld:lts -f Dockerfile.dockerfile .'
+                def myimage = docker.build('helloworld:lts', '-f Dockerfile.dockerfile .')
+                myimage.tag('sudheeshsn/helloworld:lts')
                 sh 'docker images'
             }
         }
