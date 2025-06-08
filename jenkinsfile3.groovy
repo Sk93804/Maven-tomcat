@@ -75,7 +75,7 @@ pipeline {
         stage('Docker image'){
             agent { label 'sonar-03'}
             steps{
-                scripts{
+                script{
                 unstash 'warfile'
                 unstash 'Dockerfile'
                 sh 'ls -lrt'
