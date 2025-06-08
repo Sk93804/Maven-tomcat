@@ -81,6 +81,7 @@ pipeline {
                 sh 'ls -lrt'
                 def myimage = docker.build('helloworld', '--build-arg PKG=apt -f Dockerfile.dockerfile .')
                 sh 'docker images'
+                docker.run('myimage').run('-itd --name Helloworld ')
                 }
             }
         }
