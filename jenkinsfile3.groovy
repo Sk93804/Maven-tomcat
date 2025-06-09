@@ -100,7 +100,7 @@ pipeline {
         stage('Trivy scan and upload the image'){
             steps{
                script{
-                  sh "trivy image -f template --template ${TEMPLATE_PATH} --output trivy-report.html ${IMAG_NAME}:${IMAGE_TAG}"
+                  sh "trivy image -f template --template ${TEMPLATE_PATH} --output trivy-report.html ${IMAGE_NAME}:${IMAGE_TAG}"
                }
             }
             post{
