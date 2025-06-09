@@ -4,6 +4,13 @@ pipeline {
         skipDefaultCheckout()
         buildDiscarder(logRotator(numToKeepStr: '2'))
     }
+    environment{
+        IMAGE_NAME= "Hellowrld"
+        IMAGE_TAG= "latest"
+        TEMPLATE_PATH = "/home/ubuntu/html.tpl"
+        REGISTRY_URL = "https://index.docker.io/v1/"
+        REGISTRY_CRED = 'DockerCred'
+    }
     stages {
         stage('clean ws'){
             steps{
@@ -73,16 +80,36 @@ pipeline {
             }
         }
         stage('Docker image'){
-            agent { label 'sonar-03'}
+            agent { label 'Docker'}
             steps{
                 script{
                 unstash 'warfile'
                 unstash 'Dockerfile'
                 sh 'ls -lrt'
-                def myimage = docker.build('helloworld', '--build-arg PKG=apt -f Dockerfile.dockerfile .')
+                def customImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}", '--build-arg PKG=APT -f Dockerfile.dockerfile .')
                 sh 'docker images'
-                def container = myimage.run('-it --name Helloworld')
-                echo "Container started with ID: ${container.id}"
+                
+                }
+            }
+        }
+        stage('Trivy scan and upload the image'){
+            steps{
+               script{
+                  sh "trivy image -f template --template ${TEMPLATE_PATH} --output trivy-report.html ${IMAG_NAME}:${IMAGE_TAG}"
+               }
+            }
+            post{
+                script{
+                    docker.withRegistry("${REGISTRY_URL}", "${REGISTRY_CRED}")
+                    customImage.push()
+                }
+                always{
+                    publishHTML target:[
+                        reportDir: '.'
+                        reportFiles: './trivy-report.html',
+                        reportName: "${IMAGE_NAME}:${TAG_NAME} Trivy scan report",
+                        reportTitle: 'Trivy Scan'
+                    ]
                 }
             }
         }
