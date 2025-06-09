@@ -104,7 +104,7 @@ pipeline {
                     customImage.push()
                 }
                 always{
-                    publishHTML target:[
+                    publishHTML target: [
                         reportDir: '.'
                         reportFiles: './trivy-report.html',
                         reportName: "${IMAGE_NAME}:${TAG_NAME} Trivy scan report",
