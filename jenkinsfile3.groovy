@@ -1,4 +1,5 @@
 pipeline {
+    agent none
     options{
         skipDefaultCheckout()
         buildDiscarder(logRotator(numToKeepStr: '2'))
