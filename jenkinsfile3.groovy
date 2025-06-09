@@ -99,18 +99,19 @@ pipeline {
                }
             }
             post{
+              success{
                 script{
-                    docker.withRegistry("${REGISTRY_URL}", "${REGISTRY_CRED}")
-                    customImage.push()
-                }
-                always{
+                      docker.withRegistry("${REGISTRY_URL}", "${REGISTRY_CRED}")
+                      customImage.push()
+                    }
+                
                     publishHTML (target: [
                         reportDir: '.',
                         reportFiles: "trivy-report.html",
                         reportName: "${IMAGE_NAME}:${TAG_NAME} Trivy scan report",
                         reportTitle: 'Trivy Scan'
                     ])
-                }
+              }
             }
         }
     }
