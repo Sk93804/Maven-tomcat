@@ -87,6 +87,7 @@ pipeline {
             agent { label 'Docker'}
             steps{
                 script{
+                sh 'docker --version'
                 unstash 'warfile'
                 unstash 'Dockerfile'
                 sh 'ls -lrt'
