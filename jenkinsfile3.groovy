@@ -91,7 +91,7 @@ pipeline {
                 unstash 'warfile'
                 unstash 'Dockerfile'
                 sh 'ls -lrt'
-                def customImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}", '--build-arg PKG=APT -f Dockerfile.dockerfile .')
+                def customImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}", '--build-arg PKG=apt -f Dockerfile.dockerfile .')
                 sh 'docker images'
                 
                 }
