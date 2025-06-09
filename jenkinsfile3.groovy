@@ -87,7 +87,7 @@ pipeline {
             agent { label 'Docker'}
             steps{
                 script{
-                sh 'docker --version'
+                sh 'ip addr show'
                 unstash 'warfile'
                 unstash 'Dockerfile'
                 sh 'ls -lrt'
