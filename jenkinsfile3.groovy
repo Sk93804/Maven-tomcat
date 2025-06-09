@@ -1,5 +1,4 @@
 pipeline {
-    agent { label 'Owasp' }
     options{
         skipDefaultCheckout()
         buildDiscarder(logRotator(numToKeepStr: '2'))
@@ -13,11 +12,13 @@ pipeline {
     }
     stages {
         stage('clean ws'){
+            agent { label 'Owasp' }
             steps{
                 cleanWs()
             }
         }
         stage('Checkout') {
+            agent { label 'Owasp' }
             steps {
                 checkout scmGit(
                     branches: [[name: '*/main']], 
@@ -28,6 +29,7 @@ pipeline {
         }
 
         stage('Build') {
+            agent { label 'Owasp' }
             steps {
                 script {
                     sh 'mvn clean package'
@@ -51,6 +53,7 @@ pipeline {
         // }
 
         stage('Owasp-scan') {
+            agent { label 'Owasp' }
             steps {
                 script {
                     withCredentials([string(credentialsId: 'NVD_API', variable: 'NVD_API')]) {
