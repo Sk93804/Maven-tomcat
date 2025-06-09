@@ -5,7 +5,7 @@ pipeline {
         buildDiscarder(logRotator(numToKeepStr: '2'))
     }
     environment{
-        IMAGE_NAME= "Hellowrld"
+        IMAGE_NAME= "hellowrld"
         IMAGE_TAG= "latest"
         TEMPLATE_PATH = "/home/ubuntu/html.tpl"
         REGISTRY_URL = "https://index.docker.io/v1/"
